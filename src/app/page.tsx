@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { cn } from "@/lib/utils"
+import { cn } from "@/backend/lib/utils"
 import { useState, useEffect } from "react"
 import {
    Briefcase,
@@ -81,7 +81,9 @@ export default function LandingPage() {
                </nav>
 
                <div className="flex items-center gap-6">
-                  <Link className="text-sm font-bold text-slate-700 hover:text-indigo-600 hidden sm:block" href="/login">Log In</Link>
+                  <Link className="text-sm font-bold text-slate-700 hover:text-indigo-600 hidden sm:block" href="/login">Student Login</Link>
+                  <div className="hidden sm:block w-px h-4 bg-slate-200" />
+                  <Link className="text-sm font-bold text-slate-700 hover:text-indigo-600 hidden sm:block" href="/login">Admin Login</Link>
                   <Link className="bg-indigo-600 text-white px-8 py-3 rounded-full text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200" href="/register">
                      Register
                   </Link>
@@ -358,9 +360,6 @@ export default function LandingPage() {
                   <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
                      <Link className="bg-white text-slate-900 px-10 py-5 rounded-xl text-lg font-black hover:bg-slate-100 transition-all shadow-2xl" href="/register">
                         Get Started for Free
-                     </Link>
-                     <Link className="bg-transparent text-white border-2 border-white/20 px-10 py-5 rounded-xl text-lg font-black hover:bg-white/5 transition-all" href="/login">
-                        Admin Login
                      </Link>
                   </div>
                   <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Setup in under 2 minutes • role-based access • cloud sync</p>

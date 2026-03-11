@@ -1,12 +1,13 @@
-import { auth } from "@/auth"
-import { prisma } from "@/lib/prisma"
-import { createNotification } from "@/lib/notifications"
+import { auth } from "@/backend/auth"
+import { prisma } from "@/backend/lib/prisma"
+import { createNotification } from "@/backend/lib/notifications"
 import { NextResponse } from "next/server"
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   const session = await auth()
   if (session?.user.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 })
 
@@ -15,7 +16,7 @@ export async function PATCH(
     const { status } = data
 
     const application = await prisma.application.update({
-      where: { id: params.id },
+      where: { id },
       data: { status },
       include: { student: true, company: true }
     })

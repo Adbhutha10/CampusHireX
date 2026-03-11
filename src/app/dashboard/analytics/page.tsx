@@ -1,6 +1,5 @@
-export const dynamic = "force-dynamic"
-import { auth } from "@/auth"
-import { prisma } from "@/lib/prisma"
+import { auth } from "@/backend/auth"
+import { prisma } from "@/backend/lib/prisma"
 import { redirect } from "next/navigation"
 import AnalyticsDashboard from "@/app/dashboard/analytics/AnalyticsDashboard"
 

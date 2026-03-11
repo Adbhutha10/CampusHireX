@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic"
-import { auth } from "@/auth"
-import { prisma } from "@/lib/prisma"
+import { auth } from "@/backend/auth"
+import { prisma } from "@/backend/lib/prisma"
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
@@ -9,14 +9,23 @@ export async function POST(req: Request) {
 
   try {
     const data = await req.json()
-    const { rollNumber, branch, cgpa, skills, resumeUrl, contact } = data
+    const { 
+      rollNumber, branch, cgpa, skills, resumeUrl, contact,
+      year, gender, linkedinUrl, githubUrl, bio, batchYear 
+    } = data
 
-    const profile = await prisma.studentProfile.upsert({
+    const profile = await (prisma.studentProfile as any).upsert({
       where: { userId: session.user.id },
       update: {
         rollNumber,
         branch,
         cgpa: parseFloat(cgpa),
+        year: parseInt(year) || 1,
+        gender,
+        linkedinUrl,
+        githubUrl,
+        bio,
+        batchYear,
         skills,
         resumeUrl,
         contact,
@@ -26,6 +35,12 @@ export async function POST(req: Request) {
         rollNumber,
         branch,
         cgpa: parseFloat(cgpa),
+        year: parseInt(year) || 1,
+        gender,
+        linkedinUrl,
+        githubUrl,
+        bio,
+        batchYear,
         skills,
         resumeUrl,
         contact,

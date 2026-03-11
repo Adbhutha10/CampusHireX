@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { register } from "@/app/actions/register"
+import { register } from "@/backend/actions/register"
 
 export default function RegisterPage() {
   const [error, setError] = useState("")

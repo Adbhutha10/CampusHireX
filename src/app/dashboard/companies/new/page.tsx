@@ -22,7 +22,8 @@ export default function NewCompanyPage() {
       router.push("/dashboard/companies")
       router.refresh()
     } else {
-      alert("Failed to create company")
+      const errorText = await res.text()
+      alert("Failed to create company: " + errorText)
       setIsLoading(false)
     }
   }

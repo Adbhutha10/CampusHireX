@@ -1,7 +1,7 @@
 import { Bell } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { auth } from "@/auth"
-import { prisma } from "@/lib/prisma"
+import { cn } from "@/backend/lib/utils"
+import { auth } from "@/backend/auth"
+import { prisma } from "@/backend/lib/prisma"
 import { redirect } from "next/navigation"
 
 export default async function NotificationsPage() {

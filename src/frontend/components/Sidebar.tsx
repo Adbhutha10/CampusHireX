@@ -19,14 +19,15 @@ import {
   Zap
 } from "lucide-react"
 import { useState } from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/backend/lib/utils"
 import { signOut } from "next-auth/react"
 
 interface SidebarProps {
   role: string
+  name: string
 }
 
-export default function Sidebar({ role }: SidebarProps) {
+export default function Sidebar({ role, name }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const pathname = usePathname()
 
@@ -85,25 +86,51 @@ export default function Sidebar({ role }: SidebarProps) {
             key={link.href}
             href={link.href}
             className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all font-semibold",
+              "flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-300 font-semibold group relative overflow-hidden",
               pathname === link.href 
-                 ? "bg-indigo-600 text-white shadow-md shadow-indigo-200" 
-                 : "text-slate-500 hover:bg-slate-50 hover:text-slate-900",
-              isCollapsed && "justify-center px-0"
+                 ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-200" 
+                 : "text-slate-500 hover:bg-slate-50 hover:text-slate-900 hover:translate-x-1",
+              isCollapsed && "justify-center px-0 hover:translate-x-0"
             )}
             title={isCollapsed ? link.label : ""}
           >
-            <link.icon size={22} />
+            {pathname === link.href && (
+              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            )}
+            <link.icon size={22} className={cn(
+              "transition-transform duration-300",
+              pathname === link.href ? "scale-110" : "group-hover:scale-110"
+            )} />
             {!isCollapsed && <span>{link.label}</span>}
           </Link>
         ))}
       </nav>
 
-      <div className="border-t p-3">
+      <div className="border-t p-3 space-y-2">
+        {!isCollapsed && (
+          <div className="flex items-center gap-3 px-3 py-4 mb-2 bg-slate-50/50 rounded-2xl border border-slate-100/50 group/profile transition-all hover:bg-white hover:shadow-lg hover:shadow-slate-200/40">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white font-black shadow-md shadow-indigo-100 group-hover/profile:scale-110 transition-transform">
+               {name.split(" ").map(n => n[0]).join("").toUpperCase() || "U"}
+            </div>
+            <div className="flex-1 min-w-0">
+               <p className="text-sm font-bold text-slate-900 truncate">{name}</p>
+               <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">{role}</p>
+            </div>
+          </div>
+        )}
+
+        {isCollapsed && (
+          <div className="flex justify-center mb-4">
+             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white font-black shadow-md shadow-indigo-100">
+                {name.split(" ").map(n => n[0]).join("").toUpperCase() || "U"}
+             </div>
+          </div>
+        )}
+
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
           className={cn(
-            "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-destructive transition-all hover:bg-destructive/10",
+            "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-slate-500 transition-all hover:bg-red-50 hover:text-red-600 font-semibold",
             isCollapsed && "justify-center px-0"
           )}
           title={isCollapsed ? "Logout" : ""}

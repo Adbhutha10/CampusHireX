@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic"
-import { auth } from "@/auth"
-import { prisma } from "@/lib/prisma"
+import { auth } from "@/backend/auth"
+import { prisma } from "@/backend/lib/prisma"
 import { NextResponse } from "next/server"
 
 export async function GET() {
@@ -17,7 +17,7 @@ export async function GET() {
   return NextResponse.json(applications)
 }
 
-import { createNotification } from "@/lib/notifications"
+import { createNotification } from "@/backend/lib/notifications"
 
 export async function POST(req: Request) {
   const session = await auth()

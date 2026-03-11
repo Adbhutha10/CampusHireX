@@ -1,11 +1,12 @@
-import { auth } from "@/auth"
-import { prisma } from "@/lib/prisma"
+import { auth } from "@/backend/auth"
+import { prisma } from "@/backend/lib/prisma"
 import { NextResponse } from "next/server"
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   const session = await auth()
   if (session?.user.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 })
 
@@ -14,7 +15,7 @@ export async function PUT(
     const { name, role, package: pkg, criteria, description, deadline } = data
 
     const company = await prisma.company.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         name,
         role,
@@ -34,11 +35,12 @@ export async function PUT(
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const company = await prisma.company.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
     if (!company) return new NextResponse("Not Found", { status: 404 })
     return NextResponse.json(company)

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Calendar, DollarSign, Award, Clock, ArrowRight } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/backend/lib/utils"
 import { useRouter } from "next/navigation"
 
 interface CompanyListProps {

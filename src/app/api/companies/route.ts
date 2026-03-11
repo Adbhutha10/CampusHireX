@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic"
-import { auth } from "@/auth"
-import { prisma } from "@/lib/prisma"
+import { auth } from "@/backend/auth"
+import { prisma } from "@/backend/lib/prisma"
 import { NextResponse } from "next/server"
 
 export async function GET() {
@@ -18,19 +18,22 @@ export async function POST(req: Request) {
     const data = await req.json()
     const { name, role, package: pkg, criteria, description, deadline } = data
 
-    const company = await prisma.company.create({
+    if (!name || !role || !pkg || !criteria || !description || !deadline) {
+      return new NextResponse("Missing required fields", { status: 400 })
+    }
+
+    const company = await (prisma.company as any).create({
       data: {
         name,
         role,
         package: pkg,
-        criteria: parseFloat(criteria),
+        criteria: parseFloat(criteria) || 0,
         description,
         deadline: new Date(deadline),
       }
     })
     return NextResponse.json(company)
-  } catch (err) {
-    console.error(err)
-    return new NextResponse("Internal Error", { status: 500 })
+  } catch (err: any) {
+    return new NextResponse(err.message || "Internal Error", { status: 500 })
   }
 }

@@ -42,6 +42,12 @@ model StudentProfile {
   rollNumber  String   @unique
   branch      String
   cgpa        Float
+  year        Int      @default(1)
+  gender      String?
+  linkedinUrl String?
+  githubUrl   String?
+  bio         String?  @db.Text
+  batchYear   String?
   skills      String
   resumeUrl   String?
   contact     String
@@ -56,7 +62,7 @@ model Company {
   role         String
   package      String
   criteria     Float
-  description  String
+  description  String   @db.Text
   deadline     DateTime
   applications Application[]
   schedules    InterviewSchedule[]

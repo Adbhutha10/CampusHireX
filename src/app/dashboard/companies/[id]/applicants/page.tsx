@@ -1,8 +1,8 @@
 export const dynamic = "force-dynamic"
-import { auth } from "@/auth"
-import { prisma } from "@/lib/prisma"
+import { auth } from "@/backend/auth"
+import { prisma } from "@/backend/lib/prisma"
 import { redirect } from "next/navigation"
-import { cn } from "@/lib/utils"
+import { cn } from "@/backend/lib/utils"
 
 export default async function CompanyApplicantsPage({ params }: { params: { id: string } }) {
   const session = await auth()
