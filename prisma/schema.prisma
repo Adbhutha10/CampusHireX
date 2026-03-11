@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  STUDENT
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  password      String?
+  role          String    @default("STUDENT") // Using String for SQLite compatibility if needed, but Prisma Enums work with SQLite by mapping to text
+  studentProfile StudentProfile?
+  notifications Notification[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   // schedule, job, result, system
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model StudentProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rollNumber  String   @unique
+  branch      String
+  cgpa        Float
+  skills      String
+  resumeUrl   String?
+  contact     String
+  applications Application[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Company {
+  id           String   @id @default(cuid())
+  name         String
+  role         String
+  package      String
+  criteria     Float
+  description  String
+  deadline     DateTime
+  applications Application[]
+  schedules    InterviewSchedule[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Application {
+  id               String         @id @default(cuid())
+  studentId        String
+  student          StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  companyId        String
+  company          Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  status           String         @default("APPLIED") // APPLIED, SHORTLISTED, INTERVIEW_SCHEDULED, SELECTED, REJECTED
+  interviewSchedule InterviewSchedule?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@unique([studentId, companyId])
+}
+
+model InterviewSchedule {
+  id            String      @id @default(cuid())
+  applicationId String      @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  companyId     String
+  company     Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  dateTime      DateTime
+  location      String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
