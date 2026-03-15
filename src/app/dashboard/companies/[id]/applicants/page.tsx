@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic"
 import { auth } from "@/backend/auth"
 import { prisma } from "@/backend/lib/prisma"
 import { redirect } from "next/navigation"
-import { cn } from "@/backend/lib/utils"
+import { cn, formatDate } from "@/backend/lib/utils"
 
 export default async function CompanyApplicantsPage({ params }: { params: { id: string } }) {
   const session = await auth()
@@ -79,7 +79,7 @@ export default async function CompanyApplicantsPage({ params }: { params: { id: 
                     </span>
                   </td>
                   <td className="px-6 py-5 text-sm font-medium text-muted-foreground">
-                    {new Date(app.createdAt).toLocaleDateString()}
+                    {formatDate(app.createdAt)}
                   </td>
                 </tr>
               ))}

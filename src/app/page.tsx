@@ -359,7 +359,7 @@ export default function LandingPage() {
                   </p>
                   <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
                      <Link className="bg-white text-slate-900 px-10 py-5 rounded-xl text-lg font-black hover:bg-slate-100 transition-all shadow-2xl" href="/register">
-                        Get Started for Free
+                        Get Started
                      </Link>
                   </div>
                   <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Setup in under 2 minutes • role-based access • cloud sync</p>

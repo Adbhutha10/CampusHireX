@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Calendar, DollarSign, Award, Clock, ArrowRight } from "lucide-react"
-import { cn } from "@/backend/lib/utils"
+import { cn, formatDate } from "@/backend/lib/utils"
 import { useRouter } from "next/navigation"
 
 interface CompanyListProps {
@@ -70,7 +70,7 @@ export default function CompanyList({ companies, role, studentCgpa, studentId }:
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock size={16} className="text-indigo-400" />
-                  <span>Ends {new Date(company.deadline).toLocaleDateString()}</span>
+                  <span>Ends {formatDate(company.deadline)}</span>
                 </div>
               </div>
 

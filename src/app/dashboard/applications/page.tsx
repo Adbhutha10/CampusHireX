@@ -2,7 +2,7 @@ import { auth } from "@/backend/auth"
 import { prisma } from "@/backend/lib/prisma"
 import { redirect } from "next/navigation"
 import { Briefcase, Building2, Clock, CheckCircle2, XCircle, Search, Filter, ArrowRight, ExternalLink } from "lucide-react"
-import { cn } from "@/backend/lib/utils"
+import { cn, formatDate } from "@/backend/lib/utils"
 import { StatusUpdateSelect } from "./StatusUpdateSelect"
 
 export default async function ApplicationsPage() {
@@ -89,8 +89,8 @@ export default async function ApplicationsPage() {
                     </span>
                   </td>
                   <td className="px-8 py-6">
-                    <p className="text-sm font-bold text-slate-500">{new Date(app.createdAt).toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                    <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-1">Status changed {new Date(app.updatedAt).toLocaleDateString()}</p>
+                    <p className="text-sm font-bold text-slate-500">{formatDate(app.createdAt, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                    <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-1">Status changed {formatDate(app.updatedAt)}</p>
                   </td>
                   {session.user.role === "ADMIN" && (
                     <td className="px-8 py-6 text-right">

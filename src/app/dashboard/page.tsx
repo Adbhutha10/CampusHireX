@@ -2,7 +2,7 @@ import { auth } from "@/backend/auth"
 import { prisma } from "@/backend/lib/prisma"
 import { Building2, Users, Briefcase, Trophy, Sparkles, CheckCircle2, ArrowRight, ExternalLink, PenLine, Search, CalendarClock } from "lucide-react"
 import { redirect } from "next/navigation"
-import { cn } from "@/backend/lib/utils"
+import { cn, formatDate } from "@/backend/lib/utils"
 import Link from "next/link"
 
 export default async function DashboardPage() {
@@ -212,7 +212,7 @@ export default async function DashboardPage() {
                     </div>
                     <div className="text-right flex-shrink-0 ml-4">
                        <p className="text-[9px] font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-widest">{app.status}</p>
-                       <p className="text-[8px] font-black text-slate-300 mt-1 uppercase">{new Date(app.createdAt).toLocaleDateString()}</p>
+                       <p className="text-[8px] font-black text-slate-300 mt-1 uppercase">{formatDate(app.createdAt)}</p>
                     </div>
                   </div>
                 ))
@@ -371,7 +371,7 @@ export default async function DashboardPage() {
                     </span>
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-1">
                        <CalendarClock size={10} />
-                       {new Date(app.updatedAt).toLocaleDateString()}
+                       {formatDate(app.updatedAt)}
                     </p>
                   </div>
                 </div>
