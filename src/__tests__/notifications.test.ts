@@ -26,7 +26,8 @@ describe('createNotification', () => {
   })
 
   it('creates a database notification', async () => {
-    const mockNotification = { id: '1', userId: 'user1', title: 'Test', message: 'Hello', type: 'system' }
+    const mockNotification = { id: '1', userId: 'user1', title: 'Test', message: 'Hello', type: 'system', createdAt: new Date(), updatedAt: new Date() }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     vi.mocked(prisma.notification.create).mockResolvedValue(mockNotification as any)
 
     const result = await createNotification('user1', 'Test', 'Hello', 'system')
@@ -44,9 +45,11 @@ describe('createNotification', () => {
 
   it('sends an email if emailData is provided and API key exists', async () => {
     process.env.RESEND_API_KEY = 're_test'
-    const mockNotification = { id: '1' }
+    const mockNotification = { id: '1', userId: 'user1', title: 'Test', message: 'Hello', type: 'system', createdAt: new Date(), updatedAt: new Date() }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     vi.mocked(prisma.notification.create).mockResolvedValue(mockNotification as any)
-    vi.mocked(resend.emails.send).mockResolvedValue({ id: 'email1' } as any)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    vi.mocked(resend.emails.send).mockResolvedValue({ data: { id: 'email1' }, error: null } as any)
 
     await createNotification('user1', 'Test', 'Hello', 'system', {
       studentName: 'John',
