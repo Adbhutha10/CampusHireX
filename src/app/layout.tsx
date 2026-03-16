@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
 import "@/frontend/styles/globals.css";
+import "@uploadthing/react/styles.css";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "@/app/api/uploadthing/core";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -27,6 +31,9 @@ export default function RootLayout({
       <body
         className={`${outfit.variable} ${inter.variable} font-sans antialiased`}
       >
+        <NextSSRPlugin
+          routerConfig={extractRouterConfig(ourFileRouter)}
+        />
         {children}
       </body>
     </html>

@@ -73,17 +73,17 @@ export default function LandingPage() {
                   />
                </Link>
 
-               <nav className="hidden lg:flex items-center gap-10">
-                  <Link className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors" href="#solutions">Solutions</Link>
-                  <Link className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors" href="#platform">Platform</Link>
-                  <Link className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors" href="#features">Features</Link>
-                  <Link className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors" href="#why-us">Why Us</Link>
+               <nav className="flex items-center gap-5 md:gap-10">
+                  <a className="text-[11px] md:text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-all cursor-pointer hover:translate-y-[-1px] tracking-wide" href="#solutions">Solutions</a>
+                  <a className="text-[11px] md:text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-all cursor-pointer hover:translate-y-[-1px] tracking-wide" href="#platform">Platform</a>
+                  <a className="text-[11px] md:text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-all cursor-pointer hover:translate-y-[-1px] tracking-wide" href="#features">Features</a>
+                  <a className="text-[11px] md:text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-all cursor-pointer hover:translate-y-[-1px] tracking-wide" href="#why-us">Why Us</a>
                </nav>
 
                <div className="flex items-center gap-6">
-                  <Link className="text-sm font-bold text-slate-700 hover:text-indigo-600 hidden sm:block" href="/login">Student Login</Link>
-                  <div className="hidden sm:block w-px h-4 bg-slate-200" />
-                  <Link className="text-sm font-bold text-slate-700 hover:text-indigo-600 hidden sm:block" href="/login">Admin Login</Link>
+                  <Link className="text-sm font-bold text-slate-700 hover:text-indigo-600" href="/login?role=STUDENT">Student Login</Link>
+                  <div className="w-px h-4 bg-slate-200" />
+                  <Link className="text-sm font-bold text-slate-700 hover:text-indigo-600" href="/login?role=ADMIN">Admin Login</Link>
                   <Link className="bg-indigo-600 text-white px-8 py-3 rounded-full text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200" href="/register">
                      Register
                   </Link>
@@ -110,7 +110,7 @@ export default function LandingPage() {
 
                      <div className="flex flex-col gap-8">
                         <div className="flex flex-col sm:flex-row gap-4">
-                           <Link className="bg-indigo-600 text-white px-10 py-5 rounded-xl text-lg font-bold hover:bg-indigo-700 transition-all shadow-2xl shadow-indigo-100 flex items-center justify-center gap-2 group" href="/register">
+                           <Link className="bg-indigo-600 text-white px-10 py-5 rounded-xl text-lg font-bold hover:bg-indigo-700 transition-all shadow-2xl shadow-indigo-100 flex items-center justify-center gap-2 group w-fit" href="/register">
                               Get Started
                               <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                            </Link>

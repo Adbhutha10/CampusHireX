@@ -9,18 +9,26 @@ export async function POST(req: Request) {
 
   try {
     const data = await req.json()
+    console.log("Profile update request received:", data);
+    
     const { 
       rollNumber, branch, cgpa, skills, resumeUrl, contact,
       year, gender, linkedinUrl, githubUrl, bio, batchYear 
     } = data
 
-    const profile = await (prisma.studentProfile as any).upsert({
+    // Robust parsing
+    const parsedCgpa = parseFloat(cgpa) || 0;
+    const parsedYear = parseInt(year) || 1;
+
+    console.log("Parsed numbers:", { parsedCgpa, parsedYear });
+
+    const profile = await prisma.studentProfile.upsert({
       where: { userId: session.user.id },
       update: {
         rollNumber,
         branch,
-        cgpa: parseFloat(cgpa),
-        year: parseInt(year) || 1,
+        cgpa: parsedCgpa,
+        year: parsedYear,
         gender,
         linkedinUrl,
         githubUrl,
@@ -34,8 +42,8 @@ export async function POST(req: Request) {
         userId: session.user.id,
         rollNumber,
         branch,
-        cgpa: parseFloat(cgpa),
-        year: parseInt(year) || 1,
+        cgpa: parsedCgpa,
+        year: parsedYear,
         gender,
         linkedinUrl,
         githubUrl,
@@ -46,6 +54,7 @@ export async function POST(req: Request) {
         contact,
       },
     })
+    console.log("Profile updated successfully:", profile.id);
     return NextResponse.json(profile)
   } catch (err) {
     console.error(err)

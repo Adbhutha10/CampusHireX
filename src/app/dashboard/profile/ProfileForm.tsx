@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { UploadDropzone } from "@/shared/utils/uploadthing"
 import { 
   User, 
   GraduationCap, 
@@ -10,15 +11,14 @@ import {
   Linkedin, 
   Github, 
   Phone, 
-  Hash,
-  Contact,
-  Users2
+  FileText
 } from "lucide-react"
 import { cn } from "@/backend/lib/utils"
 
 export default function ProfileForm({ initialData }: { initialData: any }) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const [resumeUrl, setResumeUrl] = useState(initialData?.resumeUrl || "")
   const router = useRouter()
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -27,6 +27,8 @@ export default function ProfileForm({ initialData }: { initialData: any }) {
     setError("")
 
     const formData = new FormData(e.currentTarget)
+    formData.append("resumeUrl", resumeUrl)
+
     const res = await fetch("/api/profile", {
       method: "POST",
       body: JSON.stringify(Object.fromEntries(formData)),
@@ -148,9 +150,45 @@ export default function ProfileForm({ initialData }: { initialData: any }) {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Resume Cloud Link (PDF)</label>
-          <input name="resumeUrl" type="url" defaultValue={initialData?.resumeUrl} className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all outline-none font-medium" placeholder="Google Drive or Dropbox link" />
+        <div className="space-y-4">
+          <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Resume Link (PDF)</label>
+          {resumeUrl ? (
+            <div className="flex items-center gap-3 p-4 border border-emerald-200 bg-emerald-50 rounded-2xl">
+              <FileText className="text-emerald-500" size={20} />
+              <div className="flex-1 overflow-hidden">
+                <p className="text-sm font-bold text-emerald-900 truncate">{resumeUrl}</p>
+                <p className="text-xs text-emerald-600 font-medium">Resume PDF Uploaded Successfully!</p>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setResumeUrl("")} 
+                className="px-3 py-1 bg-white text-emerald-700 text-xs font-bold rounded-lg hover:bg-emerald-100 transition shadow-sm">
+                Replace
+              </button>
+            </div>
+          ) : (
+            <div className="border border-slate-200 rounded-2xl bg-white p-2">
+              <UploadDropzone
+                endpoint="resumeUploader"
+                onClientUploadComplete={(res) => {
+                  console.log("UploadThing: Client upload complete", res);
+                  if (res?.[0]) {
+                    console.log("UploadThing: Setting resume URL to", res[0].url);
+                    setResumeUrl(res[0].url);
+                  }
+                }}
+                onUploadError={(error: Error) => {
+                  console.error("UploadThing: Client upload error", error);
+                  setError(`Resume Upload Failed: ${error.message}`);
+                }}
+                appearance={{
+                  button: "bg-indigo-600 font-bold hover:bg-indigo-700 text-white!",
+                  container: "border-dashed border-2 border-indigo-200 hover:border-indigo-400 focus:border-indigo-500 bg-slate-50 rounder-xl transition-all",
+                  label: "text-indigo-600 font-bold"
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
 
