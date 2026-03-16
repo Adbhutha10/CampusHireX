@@ -20,7 +20,7 @@
   --border-radius-md: calc(var(--radius) - 2px);
   --border-radius-sm: calc(var(--radius) - 4px);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-outfit), var(--font-inter), sans-serif;
+  --font-heading: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
