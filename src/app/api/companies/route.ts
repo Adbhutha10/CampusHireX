@@ -16,7 +16,7 @@ export async function POST(req: Request) {
 
   try {
     const data = await req.json()
-    const { name, role, package: pkg, criteria, description, deadline } = data
+    const { name, role, package: pkg, criteria, description, deadline, requiredSkills } = data
 
     if (!name || !role || !pkg || !criteria || !description || !deadline) {
       return new NextResponse("Missing required fields", { status: 400 })
@@ -28,6 +28,7 @@ export async function POST(req: Request) {
         role,
         package: pkg,
         criteria: parseFloat(criteria) || 0,
+        requiredSkills: requiredSkills || "",
         description,
         deadline: new Date(deadline),
       }

@@ -70,6 +70,11 @@ export default function NewCompanyPage() {
           </div>
 
           <div className="space-y-2">
+            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Required Skills</label>
+            <input name="requiredSkills" className="w-full rounded-lg border border-input bg-background/50 px-4 py-3 focus:ring-2 focus:ring-primary outline-none transition-all" placeholder="e.g., React, Node.js, Python (comma separated)" />
+          </div>
+
+          <div className="space-y-2">
             <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Job Description</label>
             <textarea name="description" className="w-full rounded-lg border border-input bg-background/50 px-4 py-3 min-h-[150px] focus:ring-2 focus:ring-primary outline-none transition-all" required placeholder="Enter role responsibilities and requirements..." />
           </div>

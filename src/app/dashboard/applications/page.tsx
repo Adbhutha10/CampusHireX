@@ -1,9 +1,10 @@
 import { auth } from "@/backend/auth"
 import { prisma } from "@/backend/lib/prisma"
 import { redirect } from "next/navigation"
-import { Briefcase, Building2, Clock, CheckCircle2, XCircle, Search, Filter, ArrowRight, ExternalLink } from "lucide-react"
+import { Briefcase, Building2, Clock, CheckCircle2, XCircle, Search, Filter, ArrowRight, ExternalLink, Target } from "lucide-react"
 import { cn, formatDate } from "@/backend/lib/utils"
 import { StatusUpdateSelect } from "./StatusUpdateSelect"
+import { calculateMatchScore } from "@/backend/lib/matching"
 
 export default async function ApplicationsPage() {
   const session = await auth()
@@ -20,6 +21,22 @@ export default async function ApplicationsPage() {
     orderBy: { updatedAt: "desc" }
   })
 
+  // Calculate match scores for all applications
+  const processedApps = applications.map(app => {
+    const match = calculateMatchScore(
+      app.student.skills,
+      app.student.cgpa,
+      (app.company as any).requiredSkills,
+      app.company.criteria
+    )
+    return { ...app, match }
+  })
+
+  // Sort by match score if admin, to see top candidates first
+  if (session.user.role === "ADMIN") {
+    processedApps.sort((a, b) => b.match.score - a.match.score)
+  }
+
   return (
     <div className="space-y-8">
       <div>
@@ -35,15 +52,16 @@ export default async function ApplicationsPage() {
               <tr className="bg-slate-50/50 border-b border-slate-100">
                 <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Company</th>
                 <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">{session.user.role === "ADMIN" ? "Student Candidate" : "Applied Role"}</th>
+                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Compatibility</th>
                 <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Current Status</th>
                 <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Application Date</th>
                 {session.user.role === "ADMIN" && <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-right">Actions</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100/50">
-              {applications.length === 0 && (
+              {processedApps.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-8 py-24 text-center">
+                  <td colSpan={6} className="px-8 py-24 text-center">
                     <div className="flex flex-col items-center gap-4">
                       <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-300">
                          <Briefcase size={32} />
@@ -61,7 +79,7 @@ export default async function ApplicationsPage() {
                   </td>
                 </tr>
               )}
-              {applications.map((app: any) => (
+              {processedApps.map((app: any) => (
                 <tr key={app.id} className="hover:bg-white/80 transition-all group/row relative">
                   <td className="px-8 py-6 relative">
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 group-hover/row:h-1/2 bg-indigo-600 rounded-r-full transition-all duration-300" />
@@ -76,6 +94,22 @@ export default async function ApplicationsPage() {
                     ) : (
                       <p className="font-extrabold text-slate-700">{app.company.role}</p>
                     )}
+                  </td>
+                  <td className="px-8 py-6">
+                    <div className="flex flex-col gap-1">
+                      <div className={cn(
+                        "flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black border w-fit",
+                        app.match.score >= 80 ? "bg-indigo-50 text-indigo-700 border-indigo-100" :
+                        app.match.score >= 50 ? "bg-amber-50 text-amber-700 border-amber-100" :
+                        "bg-slate-50 text-slate-600 border-slate-100"
+                      )}>
+                        <Target size={12} />
+                        {app.match.score}% Fit
+                      </div>
+                      <p className="text-[9px] font-bold text-slate-400 px-1 tracking-tight">
+                        {app.match.isEligible ? "Meets Basic Criteria" : "Below CGPA Criteria"}
+                      </p>
+                    </div>
                   </td>
                   <td className="px-8 py-6">
                     <span className={cn(

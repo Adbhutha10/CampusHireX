@@ -40,9 +40,10 @@ export default async function CompaniesPage() {
       </div>
 
       <CompanyList 
-        companies={companies as any} 
+        companies={companies} 
         role={session.user.role} 
         studentCgpa={studentProfile?.cgpa || 0}
+        studentSkills={studentProfile?.skills || ""}
         studentId={studentProfile?.id || ""}
       />
     </div>

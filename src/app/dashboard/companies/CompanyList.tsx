@@ -1,20 +1,34 @@
-"use client"
-
-import { useState } from "react"
-import { Calendar, DollarSign, Award, Clock, ArrowRight } from "lucide-react"
+import { useState, useMemo } from "react"
+import { Calendar, DollarSign, Award, Clock, ArrowRight, Target, CheckCircle2, XCircle } from "lucide-react"
 import { cn, formatDate } from "@/backend/lib/utils"
 import { useRouter } from "next/navigation"
+import { calculateMatchScore } from "@/backend/lib/matching"
 
 interface CompanyListProps {
   companies: any[]
   role: string
   studentCgpa: number
+  studentSkills: string
   studentId: string
 }
 
-export default function CompanyList({ companies, role, studentCgpa, studentId }: CompanyListProps) {
+export default function CompanyList({ companies, role, studentCgpa, studentSkills, studentId }: CompanyListProps) {
   const [applyingId, setApplyingId] = useState<string | null>(null)
   const router = useRouter()
+
+  const sortedCompanies = useMemo(() => {
+    if (role !== "STUDENT") return companies
+    
+    return [...companies].map(company => {
+      const match = calculateMatchScore(
+        studentSkills,
+        studentCgpa,
+        company.requiredSkills,
+        company.criteria
+      )
+      return { ...company, match }
+    }).sort((a, b) => b.match.score - a.match.score)
+  }, [companies, role, studentCgpa, studentSkills])
 
   async function handleApply(companyId: string) {
     setApplyingId(companyId)
@@ -34,15 +48,16 @@ export default function CompanyList({ companies, role, studentCgpa, studentId }:
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
-      {companies.length === 0 && (
+      {sortedCompanies.length === 0 && (
         <div className="col-span-full py-20 text-center bg-slate-50 rounded-3xl border border-dashed border-slate-200">
           <p className="text-slate-500 font-medium text-lg">No companies registered yet.</p>
         </div>
       )}
-      {companies.map((company) => {
+      {sortedCompanies.map((company) => {
         const isEligible = studentCgpa >= company.criteria || role === "ADMIN"
         const hasApplied = company.applications && company.applications.length > 0
         const isPastDeadline = new Date(company.deadline) < new Date()
+        const match = company.match
 
         return (
           <div key={company.id} className="bg-white p-8 rounded-3xl border border-slate-100 flex flex-col justify-between hover:-translate-y-1 transition-all shadow-xl shadow-slate-200/40 hover:shadow-2xl hover:shadow-indigo-100/50 relative overflow-hidden group">
@@ -60,6 +75,17 @@ export default function CompanyList({ companies, role, studentCgpa, studentId }:
                      <DollarSign size={14} />
                      {company.package}
                    </div>
+                   {role === "STUDENT" && match && (
+                      <div className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-black border shadow-sm",
+                        match.score >= 80 ? "bg-indigo-50 text-indigo-700 border-indigo-100" :
+                        match.score >= 50 ? "bg-amber-50 text-amber-700 border-amber-100" :
+                        "bg-slate-50 text-slate-700 border-slate-100"
+                      )}>
+                        <Target size={14} />
+                        {match.score}% Match
+                      </div>
+                   )}
                 </div>
               </div>
 
@@ -73,6 +99,24 @@ export default function CompanyList({ companies, role, studentCgpa, studentId }:
                   <span>Ends {formatDate(company.deadline)}</span>
                 </div>
               </div>
+
+              {role === "STUDENT" && match && company.requiredSkills && (
+                <div className="space-y-2 p-4 bg-slate-50/50 rounded-2xl border border-slate-100">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Skill Analysis</p>
+                  <div className="flex flex-wrap gap-2">
+                    {match.matchedSkills.map((s: string) => (
+                      <span key={s} className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50/50 px-2 py-0.5 rounded-md">
+                        <CheckCircle2 size={10} /> {s}
+                      </span>
+                    ))}
+                    {match.missingSkills.map((s: string) => (
+                      <span key={s} className="flex items-center gap-1 text-[11px] font-bold text-slate-400 bg-slate-100/50 px-2 py-0.5 rounded-md">
+                        <XCircle size={10} /> {s}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <p className="text-sm line-clamp-2 text-slate-500 leading-relaxed">
                 {company.description}

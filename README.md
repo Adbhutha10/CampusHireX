@@ -100,6 +100,15 @@ Automated quality assurance powered by **GitHub Actions**, running on every push
 - **Workflow File**: `.github/workflows/ci.yml`
 - **Verification**: Visit the **Actions** tab on the GitHub repository to see live results.
 
+### **6. CampusScore™ Matching Algorithm (Feature #6)**
+A multi-factor compatibility engine that automatically ranks jobs for students and candidates for recruiters.
+- **Dual-Factor Scoring**:
+  - **Skill Alignment (70%)**: Direct comparison of student skills vs. company required skills.
+  - **Academic Eligibility (30%)**: Relative scoring based on CGPA criteria.
+- **Student Insights**: Companies are automatically sorted by match score, showing matched and missing skills on each job card.
+- **Admin Analytics**: Applicants are ranked by their "Fit Score", allowing admins to focus on top talent first.
+- **Logic Engine**: `src/backend/lib/matching.ts`
+
 ### **7. Production Error Tracking (Feature #7)**
 Real-time crash reporting powered by **Sentry**, capturing errors in all environments.
 - **Full Coverage**: Monitors browser errors (client), API route crashes (server), and Edge middleware.

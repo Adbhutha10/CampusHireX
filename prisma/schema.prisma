@@ -62,6 +62,7 @@ model Company {
   role         String
   package      String
   criteria     Float
+  requiredSkills String   @default("")
   description  String   @db.Text
   deadline     DateTime
   applications Application[]
