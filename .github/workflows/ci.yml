@@ -1,0 +1,40 @@
+name: CampusHireX CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Generate Prisma Client
+      run: npx prisma generate
+
+    - name: Run Linting
+      run: npm run check-lint
+
+    - name: Run Type-checking
+      run: npm run type-check
+
+    - name: Run Unit Tests
+      run: npx vitest run
+      env:
+        DATABASE_URL: "mysql://user:pass@localhost:3306/db" # Mocked for testing logic
+        AUTH_SECRET: "mock-secret"
+        RESEND_API_KEY: "re_mock"
