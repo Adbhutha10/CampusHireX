@@ -1,0 +1,8 @@
+# Prettier ignores
+node_modules
+.next
+out
+build
+*.min.js
+prisma/migrations
+public
