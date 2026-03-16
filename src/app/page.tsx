@@ -36,8 +36,10 @@ function Typewriter({ words }: { words: string[] }) {
       }
 
       if (subIndex === 0 && reverse) {
-         setReverse(false)
-         setIndex((prev) => (prev + 1) % words.length)
+         setTimeout(() => {
+            setReverse(false)
+            setIndex((prev) => (prev + 1) % words.length)
+         }, 0)
          return
       }
 
@@ -335,7 +337,7 @@ export default function LandingPage() {
                            <div className="flex gap-1 text-amber-400">
                               {[...Array(5)].map((_, si) => <Star key={si} size={14} fill="currentColor" />)}
                            </div>
-                           <p className="text-slate-600 font-medium italic relative z-10 leading-relaxed">"{t.quote}"</p>
+                           <p className="text-slate-600 font-medium italic relative z-10 leading-relaxed">&ldquo;{t.quote}&rdquo;</p>
                            <div className="pt-4 border-t border-slate-200/50">
                               <p className="font-bold text-slate-900">{t.name}</p>
                               <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">{t.role}</p>

@@ -241,12 +241,13 @@ export default async function DashboardPage() {
   // Dynamic Greeting Logic
   const hour = new Date().getHours()
   const greeting = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening"
-  const subtext = [
+  const subtexts = [
     "Ready to take the next step in your career?",
     "Your future is being built today. Keep going!",
     "Success is where preparation meets opportunity.",
     "Don't stop until you're proud. You've got this!"
-  ][Math.floor(Math.random() * 4)]
+  ]
+  const subtext = subtexts[(session.user.name?.length || 0) % subtexts.length]
 
   // Profile Strength Calculation
   const profileFields = [

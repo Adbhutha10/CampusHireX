@@ -42,7 +42,7 @@ export default function NewSchedulePage() {
         </button>
         <div>
           <h1 className="text-3xl font-black tracking-tight text-foreground">Schedule Interview</h1>
-          <p className="text-muted-foreground">Assign a specific time and location for a candidate's round.</p>
+          <p className="text-muted-foreground">Assign a specific time and location for a candidate&apos;s round.</p>
         </div>
       </div>
 
