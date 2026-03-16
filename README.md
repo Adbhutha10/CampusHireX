@@ -107,6 +107,22 @@ Real-time crash reporting powered by **Sentry**, capturing errors in all environ
 - **Stack Traces**: Source maps are uploaded during build for human-readable error location.
 - **Config Files**: `sentry.client.config.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts`
 
+### **8. Database Environment Cleanup (Feature #8)**
+Ensures the production database (MySQL) is the sole active data source.
+- **Removed**: Unused `dev.db` and `prisma/dev.db` SQLite files left over from initial scaffolding.
+- **Gitignored**: Added `*.db` and `*.db-journal` to `.gitignore` — no accidental commits possible.
+- **Result**: The app exclusively uses **MySQL** (`campus_hire_x` schema).
+
+### **9. Code Formatting Tooling (Feature #9)**
+Enforced consistent code style across the entire codebase using **Prettier**.
+- **Config**: `.prettierrc` with project-standard settings (2-space indent, no semicolons, `es5` trailing commas).
+- **Ignore**: `.prettierignore` excludes `node_modules`, `.next`, `build`, and migration files.
+- **Commands**:
+  ```bash
+  npm run format        # Auto-format all source files
+  npm run format:check  # Check formatting (used in CI)
+  ```
+
 ---
 
 ## 🛠️ Installation & Setup
