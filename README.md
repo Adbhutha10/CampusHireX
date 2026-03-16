@@ -82,15 +82,50 @@ A mission-critical communication layer built with **Resend** and **React Email**
 - **Branded Design**: Utilizes custom React templates with "Electric Green" (Success) and "Signal Orange" (Action Required) accents.
 - **Architecture**: Low-latency delivery triggered via server-side notification hooks.
 
+### **3. Automated Testing Suite (Feature #3)**
+A dual-layer testing strategy ensuring platform reliability using **Vitest** and **Playwright**.
+- **Unit & Integration Tests (Vitest)**: Verify backend logic in isolation, including the notification engine and database utilities. Tests are located in `src/__tests__/`.
+- **End-to-End Tests (Playwright)**: Simulate real user journeys in a browser (login flow, portal navigation). Tests are located in `tests/`.
+- **Commands**:
+  ```bash
+  npx vitest run      # Run all unit tests (one-shot)
+  npm run test:e2e    # Launch browser-based E2E tests
+  ```
+
+### **4. CI/CD Pipeline (Feature #4)**
+Automated quality assurance powered by **GitHub Actions**, running on every push to `main`.
+- **Linting**: `npx eslint src` — ensures code style consistency.
+- **Type-Checking**: `tsc --noEmit` — verifies full TypeScript safety.
+- **Unit Tests**: `npx vitest run` — runs the full test suite.
+- **Workflow File**: `.github/workflows/ci.yml`
+- **Verification**: Visit the **Actions** tab on the GitHub repository to see live results.
+
+### **7. Production Error Tracking (Feature #7)**
+Real-time crash reporting powered by **Sentry**, capturing errors in all environments.
+- **Full Coverage**: Monitors browser errors (client), API route crashes (server), and Edge middleware.
+- **Global Error Boundary**: A branded "Something went wrong" page is shown to users, while the full stack trace is silently sent to Sentry.
+- **Stack Traces**: Source maps are uploaded during build for human-readable error location.
+- **Config Files**: `sentry.client.config.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts`
+
 ---
 
 ## 🛠️ Installation & Setup
 
 ### **1. Environment Config**
-Create a `.env` file:
+Create a `.env` file with all required keys:
 ```env
+# Core
 DATABASE_URL="mysql://USER:PASSWORD@localhost:3306/campus_hire_x"
 AUTH_SECRET="your-32-char-secret-key"
+
+# Feature 1: Resume Uploads (UploadThing)
+UPLOADTHING_TOKEN="your_uploadthing_token"
+
+# Feature 2: External Notification Engine (Resend)
+RESEND_API_KEY="your_resend_api_key"
+
+# Feature 7: Error Tracking (Sentry)
+NEXT_PUBLIC_SENTRY_DSN="https://xxx@xxx.ingest.sentry.io/xxx"
 ```
 
 ### **2. Launch Sequence**
@@ -101,16 +136,31 @@ npx prisma db push   # Deploy schema
 npm run dev          # Start development server
 ```
 
-### **3. Extended Features Configuration**
-Add these to your `.env` for full functionality:
-```env
-# Feature 1: Resume Uploads (UploadThing)
-UPLOADTHING_TOKEN="your_uploadthing_token"
+---
 
-# Feature 2: External Notification Engine (Resend)
-RESEND_API_KEY="your_resend_api_key"
-NEXTAUTH_URL="http://localhost:3000"
+## ✅ Feature Verification Guide
+
+### Feature 2 – Email Notifications
+1. Register as a Student and apply to a company.
+2. As Admin, change the application status to **Selected**.
+3. Check the student's inbox — a branded status update email should arrive.
+
+### Feature 3 – Automated Testing
+```bash
+npx vitest run     # Should show: 2 passed
+npm run test:e2e   # Should show: 2 passed (Chromium)
 ```
+
+### Feature 4 – CI/CD Pipeline
+1. Push any commit to the `main` branch on GitHub.
+2. Go to **GitHub → Actions** tab.
+3. The **"CampusHireX CI"** workflow should show a ✅ green checkmark.
+
+### Feature 7 – Sentry Error Tracking
+1. Ensure your Sentry DSN is in `.env`.
+2. Open your browser's console on `localhost:3000`.
+3. Trigger any unhandled error (e.g., navigate to a broken route).
+4. Visit your **[Sentry Dashboard](https://sentry.io)** — the error should appear within seconds.
 
 ---
 *Built for modern institutions. Engineered by Durgam Vaishnavi.*
