@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -6,4 +7,13 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  // Suppresses source map uploading logs during build
+  silent: true,
+  org: "adbhutha",
+  project: "javascript-nextjs",
+  // Upload source maps to Sentry for readable stack traces
+  widenClientFileUpload: true,
+  // Disable the Sentry telemetry
+  telemetry: false,
+});
