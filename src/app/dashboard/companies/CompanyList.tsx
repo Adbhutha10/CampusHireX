@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useMemo } from "react"
 import { Calendar, DollarSign, Award, Clock, ArrowRight, Target, CheckCircle2, XCircle } from "lucide-react"
 import { cn, formatDate } from "@/backend/lib/utils"

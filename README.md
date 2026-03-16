@@ -100,6 +100,13 @@ Automated quality assurance powered by **GitHub Actions**, running on every push
 - **Workflow File**: `.github/workflows/ci.yml`
 - **Verification**: Visit the **Actions** tab on the GitHub repository to see live results.
 
+### **5. Real-Time Capabilities (Feature #5)**
+Instant, live updates for students and admins powered by **Pusher**.
+- **Live Notifications**: Students receive immediate, branded toast notifications the second an admin updates their application status.
+- **Serverless WebSockets**: Optimized for Next.js 15, using Pusher Channels to bypass cold starts and traditional socket limitations.
+- **Global Listener**: A dedicated `RealTimeNotifications` component listens for events across the entire dashboard.
+- **UI Feedback**: Utilizes `react-hot-toast` for high-visibility, professional-grade alerts.
+
 ### **6. CampusScore™ Matching Algorithm (Feature #6)**
 A multi-factor compatibility engine that automatically ranks jobs for students and candidates for recruiters.
 - **Dual-Factor Scoring**:
@@ -151,6 +158,13 @@ RESEND_API_KEY="your_resend_api_key"
 
 # Feature 7: Error Tracking (Sentry)
 NEXT_PUBLIC_SENTRY_DSN="https://xxx@xxx.ingest.sentry.io/xxx"
+
+# Feature 5: Real-Time Capabilities (Pusher)
+PUSHER_APP_ID="your_id"
+PUSHER_KEY="your_key"
+PUSHER_SECRET="your_secret"
+NEXT_PUBLIC_PUSHER_KEY="your_key"
+NEXT_PUBLIC_PUSHER_CLUSTER="your_cluster"
 ```
 
 ### **2. Launch Sequence**
