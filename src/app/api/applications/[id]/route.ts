@@ -56,6 +56,23 @@ export async function PATCH(
       } : undefined
     )
 
+    // Trigger Real-Time Notification via Pusher
+    try {
+      const { pusherServer } = await import("@/backend/lib/pusher")
+      await pusherServer.trigger(
+        `user-${application.student.userId}`,
+        "status-updated",
+        {
+          message,
+          status,
+          companyName: application.company.name
+        }
+      )
+    } catch (pusherError) {
+      console.error("Pusher trigger failed:", pusherError)
+      // Don't fail the request if Pusher fails
+    }
+
     return NextResponse.json(application)
   } catch (err) {
     console.error(err)
