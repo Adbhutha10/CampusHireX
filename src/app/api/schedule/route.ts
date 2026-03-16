@@ -36,11 +36,23 @@ export async function POST(req: Request) {
     })
 
     // Create Notification
+    // Fetch student's user email for Resend
+    const studentUser = await prisma.user.findUnique({
+      where: { id: application.student.userId },
+      select: { email: true, name: true }
+    })
+
     await createNotification(
       application.student.userId,
       "Interview Scheduled",
       `Your interview for ${application.company.name} has been scheduled for ${new Date(dateTime).toLocaleString()} at ${location}.`,
-      "schedule"
+      "schedule",
+      studentUser?.email ? {
+        studentName: studentUser.name || "Student",
+        companyName: application.company.name,
+        status: "INTERVIEW_SCHEDULED",
+        email: studentUser.email
+      } : undefined
     )
 
     return NextResponse.json(schedule)

@@ -64,6 +64,26 @@ The project follows a **Modular Full-Stack Architecture**, logically separating 
 
 ---
 
+## 🔥 Implemented Core Features
+
+### **1. Cloud Storage & Resume Management (Feature #1)**
+**CampusHireX** utilizes **UploadThing** for high-performance, secure file handling.
+- **Workflow**: Students can upload their resumes directly from the Profile Command Center. 
+- **Server-Side Integration**: Uploaded files are automatically associated with the student's database profile.
+- **Security**: Strict file type validation (PDF only) and size limits.
+- **Components**: Custom `ProfileForm.tsx` with drag-and-drop support.
+
+### **2. Automated External Notification Engine (Feature #2)**
+A mission-critical communication layer built with **Resend** and **React Email**.
+- **Automated Alerts**: Students receive beautifully formatted, branded emails for:
+  - **Application Success**: Immediate confirmation upon applying to a company.
+  - **Status Updates**: Real-time alerts when Shortlisted, Selected, or Rejected.
+  - **Interview Invites**: Direct calendar-friendly emails when an interview is scheduled.
+- **Branded Design**: Utilizes custom React templates with "Electric Green" (Success) and "Signal Orange" (Action Required) accents.
+- **Architecture**: Low-latency delivery triggered via server-side notification hooks.
+
+---
+
 ## 🛠️ Installation & Setup
 
 ### **1. Environment Config**
@@ -79,6 +99,17 @@ npm install          # Install dependencies
 npx prisma generate  # Sync database client
 npx prisma db push   # Deploy schema
 npm run dev          # Start development server
+```
+
+### **3. Extended Features Configuration**
+Add these to your `.env` for full functionality:
+```env
+# Feature 1: Resume Uploads (UploadThing)
+UPLOADTHING_TOKEN="your_uploadthing_token"
+
+# Feature 2: External Notification Engine (Resend)
+RESEND_API_KEY="your_resend_api_key"
+NEXTAUTH_URL="http://localhost:3000"
 ```
 
 ---

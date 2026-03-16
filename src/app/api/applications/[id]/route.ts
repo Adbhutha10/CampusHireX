@@ -37,11 +37,23 @@ export async function PATCH(
         message = `The status of your application for ${application.company.name} has been updated to ${status.replace("_", " ")}.`
     }
 
+    // Fetch student's user email for Resend
+    const studentUser = await prisma.user.findUnique({
+      where: { id: application.student.userId },
+      select: { email: true, name: true }
+    })
+
     await createNotification(
       application.student.userId,
       "Application Status Updated",
       message,
-      status === "SELECTED" ? "result" : "system"
+      status === "SELECTED" ? "result" : "system",
+      studentUser?.email ? {
+        studentName: studentUser.name || "Student",
+        companyName: application.company.name,
+        status: status,
+        email: studentUser.email
+      } : undefined
     )
 
     return NextResponse.json(application)
