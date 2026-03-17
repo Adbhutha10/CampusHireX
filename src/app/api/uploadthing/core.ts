@@ -1,4 +1,6 @@
+import { auth } from "@/backend/auth";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { UploadThingError } from "uploadthing/server";
 
 const f = createUploadthing();
 
@@ -7,8 +9,9 @@ export const ourFileRouter = {
     pdf: { maxFileSize: "4MB", maxFileCount: 1 },
   })
     .middleware(async ({ req }) => {
-      console.log("=== UPLOADTHING MIDDLEWARE TRIGGERED ===");
-      return { debug: true };
+      const session = await auth();
+      if (!session) throw new UploadThingError("Unauthorized");
+      return { userId: session.user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
       console.log("=== UPLOADTHING SERVER ONUPLOADCOMPLETE ===");
@@ -18,7 +21,7 @@ export const ourFileRouter = {
       console.log("Metadata:", metadata);
 
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: "user_1", url: file.url };
+      return { uploadedBy: metadata.userId, url: file.url };
     }),
 } satisfies FileRouter;
 
