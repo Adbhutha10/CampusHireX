@@ -25,10 +25,13 @@ export async function POST(req: Request) {
 
   try {
     const data = await req.json()
-    const { companyId, studentId } = data
+    const { companyId } = data
 
-    // Verify eligibility
-    const student = await prisma.studentProfile.findUnique({ where: { id: studentId } })
+    // Identify student from session
+    const student = await prisma.studentProfile.findUnique({ 
+      where: { userId: session.user.id } 
+    })
+    
     const company = await prisma.company.findUnique({ where: { id: companyId } })
 
     if (!student || !company) return new NextResponse("Not Found", { status: 404 })
@@ -40,7 +43,7 @@ export async function POST(req: Request) {
     const application = await prisma.application.create({
       data: {
         companyId,
-        studentId,
+        studentId: student.id,
         status: "APPLIED"
       }
     })
