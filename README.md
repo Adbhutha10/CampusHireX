@@ -202,4 +202,4 @@ npm run test:e2e   # Should show: 2 passed (Chromium)
 4. Visit your **[Sentry Dashboard](https://sentry.io)** — the error should appear within seconds.
 
 ---
-*Built for modern institutions. Engineered by Durgam Vaishnavi.*
+*Built for modern institutions.*
