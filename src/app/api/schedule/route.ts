@@ -61,7 +61,7 @@ export async function POST(req: Request) {
   } catch (err: unknown) {
     if (err instanceof Error) {
       if (err.name === "ZodError") {
-        // @ts-expect-error
+        // @ts-expect-error: ZodError contains errors property but type is unknown
         return new NextResponse(err.errors[0].message, { status: 400 })
       }
       return new NextResponse(err.message, { status: 500 })
