@@ -30,22 +30,23 @@ function Typewriter({ words }: { words: string[] }) {
    const [reverse, setReverse] = useState(false)
 
    useEffect(() => {
+      // If we finished typing a word
       if (subIndex === words[index].length + 1 && !reverse) {
-         setTimeout(() => setReverse(true), 1500)
-         return
+         const timeout = setTimeout(() => setReverse(true), 1500)
+         return () => clearTimeout(timeout)
       }
 
+      // If we finished deleting a word
       if (subIndex === 0 && reverse) {
-         setTimeout(() => {
-            setReverse(false)
-            setIndex((prev) => (prev + 1) % words.length)
-         }, 0)
+         setReverse(false)
+         setIndex((prev) => (prev + 1) % words.length)
          return
       }
 
+      // Typing/Deleting logic
       const timeout = setTimeout(() => {
          setSubIndex((prev) => prev + (reverse ? -1 : 1))
-      }, Math.max(reverse ? 50 : 100, parseInt((Math.random() * 100).toString())))
+      }, reverse ? 75 : 150)
 
       return () => clearTimeout(timeout)
    }, [subIndex, index, reverse, words])
@@ -57,6 +58,8 @@ function Typewriter({ words }: { words: string[] }) {
       </span>
    )
 }
+
+const TYPEWRITER_WORDS = ["Brilliant Teams", "Ambitious Students", "Seamless Success"]
 
 export default function LandingPage() {
    return (
