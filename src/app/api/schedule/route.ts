@@ -5,13 +5,15 @@ import { NextResponse } from "next/server"
 
 import { createNotification } from "@/backend/lib/notifications"
 
+import { InterviewScheduleSchema } from "@/shared/validation"
+
 export async function POST(req: Request) {
   const session = await auth()
   if (session?.user.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 })
 
   try {
-    const data = await req.json()
-    const { applicationId, dateTime, location } = data
+    const body = await req.json()
+    const { applicationId, dateTime, location } = InterviewScheduleSchema.parse(body)
 
     const application = await prisma.application.findUnique({
       where: { id: applicationId },
@@ -56,7 +58,10 @@ export async function POST(req: Request) {
     )
 
     return NextResponse.json(schedule)
-  } catch (err) {
+  } catch (err: any) {
+    if (err.name === "ZodError") {
+      return new NextResponse(err.errors[0].message, { status: 400 })
+    }
     console.error(err)
     return new NextResponse("Internal Error", { status: 500 })
   }

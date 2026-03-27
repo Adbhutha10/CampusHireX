@@ -19,13 +19,15 @@ export async function GET() {
 
 import { createNotification } from "@/backend/lib/notifications"
 
+import { ApplicationSchema } from "@/shared/validation"
+
 export async function POST(req: Request) {
   const session = await auth()
   if (!session) return new NextResponse("Unauthorized", { status: 401 })
 
   try {
-    const data = await req.json()
-    const { companyId } = data
+    const body = await req.json()
+    const { companyId } = ApplicationSchema.parse(body)
 
     // Identify student from session
     const student = await prisma.studentProfile.findUnique({ 
@@ -88,7 +90,10 @@ export async function POST(req: Request) {
     )
 
     return NextResponse.json(application)
-  } catch (err) {
+  } catch (err: any) {
+    if (err.name === "ZodError") {
+      return new NextResponse(err.errors[0].message, { status: 400 })
+    }
     console.error(err)
     return new NextResponse("Internal Error", { status: 500 })
   }

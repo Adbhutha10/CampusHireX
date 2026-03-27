@@ -13,31 +13,32 @@ export async function GET() {
   return NextResponse.json(companies)
 }
 
+import { CompanySchema } from "@/shared/validation"
+
 export async function POST(req: Request) {
   const session = await auth()
   if (session?.user.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 })
 
   try {
-    const data = await req.json()
-    const { name, role, package: pkg, criteria, description, deadline, requiredSkills } = data
-
-    if (!name || !role || !pkg || !criteria || !description || !deadline) {
-      return new NextResponse("Missing required fields", { status: 400 })
-    }
+    const body = await req.json()
+    const { name, role, package: pkg, criteria, description, deadline, requiredSkills } = CompanySchema.parse(body)
 
     const company = await (prisma.company as any).create({
       data: {
         name,
         role,
         package: pkg,
-        criteria: parseFloat(criteria) || 0,
-        requiredSkills: requiredSkills || "",
+        criteria,
+        requiredSkills,
         description,
-        deadline: new Date(deadline),
+        deadline,
       }
     })
     return NextResponse.json(company)
   } catch (err: any) {
+    if (err.name === "ZodError") {
+      return new NextResponse(err.errors[0].message, { status: 400 })
+    }
     return new NextResponse(err.message || "Internal Error", { status: 500 })
   }
 }

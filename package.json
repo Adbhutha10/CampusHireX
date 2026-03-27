@@ -38,7 +38,8 @@
     "recharts": "^3.8.0",
     "resend": "^6.9.3",
     "tailwind-merge": "^3.5.0",
-    "uploadthing": "^7.7.4"
+    "uploadthing": "^7.7.4",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
