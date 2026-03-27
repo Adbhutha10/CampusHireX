@@ -1,7 +1,7 @@
 import { auth } from "@/backend/auth"
 import { prisma } from "@/backend/lib/prisma"
 import { redirect } from "next/navigation"
-import { Briefcase, Building2, Clock, CheckCircle2, XCircle, Search, Filter, ArrowRight, ExternalLink, Target } from "lucide-react"
+import { Briefcase, Target } from "lucide-react"
 import { cn, formatDate } from "@/backend/lib/utils"
 import { StatusUpdateSelect } from "./StatusUpdateSelect"
 import { calculateMatchScore } from "@/backend/lib/matching"

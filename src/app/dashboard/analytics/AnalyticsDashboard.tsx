@@ -2,9 +2,19 @@
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-const COLORS = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+interface AnalyticsStats {
+  totalPlaced: number
+  totalStudents: number
+  totalCompanies: number
+}
 
-export default function AnalyticsDashboard({ stats, branchData }: { stats: any, branchData: any[] }) {
+interface BranchData {
+  name: string
+  total: number
+  placed: number
+}
+
+export default function AnalyticsDashboard({ stats, branchData }: { stats: AnalyticsStats, branchData: BranchData[] }) {
   const pieData = [
     { name: 'Placed', value: stats.totalPlaced },
     { name: 'Unplaced', value: Math.max(0, stats.totalStudents - stats.totalPlaced) }

@@ -7,21 +7,20 @@ import { useState, useEffect } from "react"
 import {
    Briefcase,
    Users,
-   Building2,
    BarChart3,
    Zap,
    ShieldCheck,
-   Rocket,
    ArrowRight,
-   CheckCircle2,
    Layout,
    Globe,
    Database,
    Bell,
-   Search,
    Check,
    Star,
-   Quote
+   Quote,
+   Workflow,
+   CloudLightning,
+   type LucideIcon
 } from "lucide-react"
 
 function Typewriter({ words }: { words: string[] }) {
@@ -38,9 +37,11 @@ function Typewriter({ words }: { words: string[] }) {
 
       // If we finished deleting a word
       if (subIndex === 0 && reverse) {
-         setReverse(false)
-         setIndex((prev) => (prev + 1) % words.length)
-         return
+         const timeout = setTimeout(() => {
+            setReverse(false)
+            setIndex((prev) => (prev + 1) % words.length)
+         }, 500)
+         return () => clearTimeout(timeout)
       }
 
       // Typing/Deleting logic
@@ -58,8 +59,6 @@ function Typewriter({ words }: { words: string[] }) {
       </span>
    )
 }
-
-const TYPEWRITER_WORDS = ["Brilliant Teams", "Ambitious Students", "Seamless Success"]
 
 export default function LandingPage() {
    return (
@@ -302,15 +301,15 @@ export default function LandingPage() {
 
                <div className="container px-6 mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
                   {[
-                     { title: "Perfect Skill Mapping", icon: Target, desc: "Recruiters can target best profiles using Job Matching Templates." },
-                     { title: "Systematic Recruitment", icon: Workflow, desc: "Nurture relationships with candidates via a one-view database." },
+                     { title: "Perfect Skill Mapping", icon: Zap, desc: "Recruiters can target best profiles using Job Matching Templates." },
+                     { title: "Systematic Recruitment", icon: Briefcase, desc: "Nurture relationships with candidates via a one-view database." },
                      { title: "Prompt Alerts", icon: Bell, desc: "Stay up-to-date with automated alerts sent via SMS and email." },
                      { title: "Rich Data Analytics", icon: Database, desc: "Create ad-hoc reports and gain insights to optimize processes." },
                      { title: "Effective Outreach", icon: Globe, desc: "Better outreach with greater employer conversions via integrated CRM." },
-                     { title: "Flexible Migrations", icon: CloudLightning, desc: "Cleanse and load data from legacy systems during cutover easily." },
+                     { title: "Flexible Migrations", icon: Zap, desc: "Cleanse and load data from legacy systems during cutover easily." },
                      { title: "Secure Repository", icon: ShieldCheck, desc: "Store placement agreements and sensitive data securely." },
                      { title: "Interactive Boards", icon: Layout, desc: "Dashboards to monitor and evaluate each step of the journey." }
-                  ].map((f, i) => (
+                   ].map((f, i) => (
                      <div key={i} className="space-y-4 group">
                         <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-all border border-transparent group-hover:border-indigo-100">
                            <f.icon size={24} />
@@ -390,15 +389,10 @@ export default function LandingPage() {
                </div>
 
                <div className="pt-4 border-t border-slate-50 text-center text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
-                  <p>© {new Date().getFullYear()} CampusHireX. Built by Beere Adbhutha. All rights reserved.</p>
+                  <p>© {new Date().getFullYear()} CampusHireX. Built by Adbhutha. All rights reserved.</p>
                </div>
             </div>
          </footer>
       </div>
    )
 }
-
-// Icons for the grid
-function Target(props: any) { return <Zap {...props} /> } // Temporary mapping for uniqueness
-function Workflow(props: any) { return <Briefcase {...props} /> }
-function CloudLightning(props: any) { return <Zap {...props} /> }

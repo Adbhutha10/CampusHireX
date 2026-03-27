@@ -23,12 +23,12 @@ export default async function AnalyticsPage() {
   // Group by branch
   const branchDataMap: Record<string, { name: string, total: number, placed: number }> = {}
   
-  students.forEach((s: any) => {
+  students.forEach((s) => {
     if (!branchDataMap[s.branch]) branchDataMap[s.branch] = { name: s.branch, total: 0, placed: 0 }
     branchDataMap[s.branch].total++
   })
 
-  placedApplications.forEach((app: any) => {
+  placedApplications.forEach((app) => {
     if (branchDataMap[app.student.branch]) {
       branchDataMap[app.student.branch].placed++
     }

@@ -12,8 +12,8 @@ interface Student {
   branch: string
   cgpa: number
   user: {
-    name: string
-    email: string
+    name: string | null
+    email: string | null
   }
   _count: {
     applications: number
@@ -135,10 +135,10 @@ export default function StudentSearchAndFilter({ students, branches }: StudentSe
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-gradient-to-br from-indigo-50 to-white rounded-2xl flex items-center justify-center border border-indigo-100/50 shadow-sm text-indigo-600 font-black text-lg group-hover:scale-110 transition-transform">
-                          {student.user.name.charAt(0)}
+                          {student.user.name?.charAt(0) || "?"}
                         </div>
                         <div>
-                          <p className="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors text-lg leading-tight">{student.user.name}</p>
+                          <p className="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors text-lg leading-tight">{student.user.name || "Unnamed Student"}</p>
                           <p className="text-xs text-slate-400 font-medium mt-1">{student.user.email}</p>
                         </div>
                       </div>

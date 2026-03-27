@@ -27,13 +27,13 @@ export default async function StudentsPage({
     where.cgpa = { gte: parseFloat(params.minCgpa) }
   }
 
-  const students = await prisma.studentProfile.findMany({
+  const students = (await prisma.studentProfile.findMany({
     where,
     include: {
       user: true,
       _count: { select: { applications: true } }
     }
-  })
+  })) as unknown as any // Casting at the boundary to satisfy legacy components
 
   // Get unique branches for the filter component
   const allBranches = await prisma.studentProfile.findMany({
@@ -51,7 +51,7 @@ export default async function StudentsPage({
         </div>
       </div>
 
-      <StudentSearchAndFilter students={students as any} branches={branches} />
+      <StudentSearchAndFilter students={students} branches={branches} />
     </div>
   )
 }

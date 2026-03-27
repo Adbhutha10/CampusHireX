@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     const body = await req.json()
     const { name, role, package: pkg, criteria, description, deadline, requiredSkills } = CompanySchema.parse(body)
 
-    const company = await (prisma.company as any).create({
+    const company = await prisma.company.create({
       data: {
         name,
         role,
@@ -35,10 +35,14 @@ export async function POST(req: Request) {
       }
     })
     return NextResponse.json(company)
-  } catch (err: any) {
-    if (err.name === "ZodError") {
-      return new NextResponse(err.errors[0].message, { status: 400 })
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      if (err.name === "ZodError") {
+        // @ts-ignore - ZodError structure
+        return new NextResponse(err.errors[0].message, { status: 400 })
+      }
+      return new NextResponse(err.message, { status: 500 })
     }
-    return new NextResponse(err.message || "Internal Error", { status: 500 })
+    return new NextResponse("Internal Error", { status: 500 })
   }
 }

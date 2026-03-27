@@ -51,11 +51,14 @@ export async function POST(req: Request) {
       },
     })
     return NextResponse.json(profile)
-  } catch (err: any) {
-    if (err.name === "ZodError") {
-      return new NextResponse(err.errors[0].message, { status: 400 })
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      if (err.name === "ZodError") {
+        // @ts-ignore
+        return new NextResponse(err.errors[0].message, { status: 400 })
+      }
+      return new NextResponse(err.message, { status: 500 })
     }
-    console.error(err)
     return new NextResponse("Internal Error", { status: 500 })
   }
 }

@@ -26,7 +26,7 @@ export default function Error({
         <div className="space-y-2">
           <h2 className="text-3xl font-black text-slate-900 tracking-tight">Oops! Something went wrong</h2>
           <p className="text-slate-500 font-medium">
-            We've encountered an unexpected error. Don't worry, our team has been notified and is looking into it.
+            We&apos;ve encountered an unexpected error. Don&apos;t worry, our team has been notified and is looking into it.
           </p>
         </div>
 

@@ -1,5 +1,3 @@
-import { Briefcase } from "lucide-react"
-
 export default function Loading() {
   return (
     <div className="space-y-8 animate-pulse">

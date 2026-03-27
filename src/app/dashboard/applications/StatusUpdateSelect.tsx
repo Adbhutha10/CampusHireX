@@ -28,7 +28,7 @@ export function StatusUpdateSelect({ applicationId, currentStatus }: { applicati
       
       toast.success(`Status updated to ${newStatus.replace("_", " ")}`)
       router.refresh()
-    } catch (err) {
+    } catch (_err) {
       // Rollback
       setStatus(oldStatus)
       toast.error("Failed to update status")

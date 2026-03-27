@@ -8,7 +8,7 @@ export const ourFileRouter = {
   resumeUploader: f({
     pdf: { maxFileSize: "4MB", maxFileCount: 1 },
   })
-    .middleware(async ({ req }) => {
+    .middleware(async ({ req: _req }) => {
       const session = await auth();
       if (!session) throw new UploadThingError("Unauthorized");
       return { userId: session.user.id };
