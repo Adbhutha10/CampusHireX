@@ -10,8 +10,8 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 # Use npm to install if package-lock.json exists, otherwise skip (assumes you map node_modules for local dev, but in Docker we need them)
 RUN \
-  if [ -f package-lock.json ]; then npm ci; \
-  else npm install; \
+  if [ -f package-lock.json ]; then npm ci --legacy-peer-deps; \
+  else npm install --legacy-peer-deps; \
   fi
 
 # Rebuild the source code only when needed
