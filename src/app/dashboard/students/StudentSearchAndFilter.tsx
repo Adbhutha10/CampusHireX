@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useMemo } from "react"
-import { Search, Filter, X, ChevronDown } from "lucide-react"
+import { useState, useEffect, useTransition } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Search, Filter, X, Loader2 } from "lucide-react"
 import { cn } from "@/backend/lib/utils"
 import ExportButton from "./ExportButton"
 
@@ -21,28 +22,38 @@ interface Student {
 
 interface StudentSearchAndFilterProps {
   students: Student[]
+  branches: string[]
 }
 
-export default function StudentSearchAndFilter({ students }: StudentSearchAndFilterProps) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedBranch, setSelectedBranch] = useState<string>("All")
-  const [minCgpa, setMinCgpa] = useState<string>("")
+export default function StudentSearchAndFilter({ students, branches }: StudentSearchAndFilterProps) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [isPending, startTransition] = useTransition()
 
-  const branches = useMemo(() => {
-    const b = new Set(students.map(s => s.branch))
-    return ["All", ...Array.from(b)]
-  }, [students])
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "")
+  const [selectedBranch, setSelectedBranch] = useState(searchParams.get("branch") || "All")
+  const [minCgpa, setMinCgpa] = useState(searchParams.get("minCgpa") || "")
 
-  const filteredStudents = useMemo(() => {
-    return students.filter(s => {
-      const matchesSearch = s.user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                            s.rollNumber.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesBranch = selectedBranch === "All" || s.branch === selectedBranch
-      const matchesCgpa = minCgpa === "" || s.cgpa >= parseFloat(minCgpa)
+  // Debounced update to URL
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString())
+      if (searchTerm) params.set("search", searchTerm)
+      else params.delete("search")
       
-      return matchesSearch && matchesBranch && matchesCgpa
-    })
-  }, [students, searchTerm, selectedBranch, minCgpa])
+      if (selectedBranch !== "All") params.set("branch", selectedBranch)
+      else params.delete("branch")
+      
+      if (minCgpa) params.set("minCgpa", minCgpa)
+      else params.delete("minCgpa")
+
+      startTransition(() => {
+        router.push(`?${params.toString()}`)
+      })
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [searchTerm, selectedBranch, minCgpa, router, searchParams])
 
   return (
     <div className="space-y-6">
@@ -56,14 +67,17 @@ export default function StudentSearchAndFilter({ students }: StudentSearchAndFil
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          {searchTerm && (
-            <button 
-              onClick={() => setSearchTerm("")}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors"
-            >
-              <X size={18} />
-            </button>
-          )}
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+            {isPending && <Loader2 className="animate-spin text-indigo-500" size={18} />}
+            {searchTerm && (
+              <button 
+                onClick={() => setSearchTerm("")}
+                className="text-slate-300 hover:text-slate-500 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
@@ -92,12 +106,13 @@ export default function StudentSearchAndFilter({ students }: StudentSearchAndFil
             />
           </div>
 
-          <ExportButton data={filteredStudents} />
+          <ExportButton data={students} />
         </div>
       </div>
 
-      <div className="bg-white/70 backdrop-blur-xl rounded-[40px] overflow-hidden shadow-xl shadow-slate-200/40 border border-white/40">
-        <div className="overflow-x-auto min-h-[400px]">
+      <div className="bg-white/70 backdrop-blur-xl rounded-[40px] overflow-hidden shadow-xl shadow-slate-200/40 border border-white/40 min-h-[400px]">
+        {/* Same table structure as before, using 'students' prop directly */}
+        <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50/50 border-b border-slate-100">
@@ -108,14 +123,14 @@ export default function StudentSearchAndFilter({ students }: StudentSearchAndFil
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {filteredStudents.length === 0 ? (
+              {students.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-8 py-32 text-center text-slate-400 font-bold uppercase tracking-widest italic text-xs">
                     No matching student records found.
                   </td>
                 </tr>
               ) : (
-                filteredStudents.map((student) => (
+                students.map((student) => (
                   <tr key={student.id} className="hover:bg-white/95 transition-all group">
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-4">

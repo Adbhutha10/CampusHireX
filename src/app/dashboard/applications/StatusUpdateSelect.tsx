@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import toast from "react-hot-toast"
 
 export function StatusUpdateSelect({ applicationId, currentStatus }: { applicationId: string, currentStatus: string }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -11,20 +12,29 @@ export function StatusUpdateSelect({ applicationId, currentStatus }: { applicati
   const statuses = ["APPLIED", "SHORTLISTED", "INTERVIEW_SCHEDULED", "SELECTED", "REJECTED"]
 
   const updateStatus = async (newStatus: string) => {
+    const oldStatus = status
+    // Optimistic Update
+    setStatus(newStatus)
     setIsLoading(true)
-    const res = await fetch(`/api/applications/${applicationId}`, {
-      method: "PATCH",
-      body: JSON.stringify({ status: newStatus }),
-      headers: { "Content-Type": "application/json" }
-    })
 
-    if (res.ok) {
-      setStatus(newStatus)
+    try {
+      const res = await fetch(`/api/applications/${applicationId}`, {
+        method: "PATCH",
+        body: JSON.stringify({ status: newStatus }),
+        headers: { "Content-Type": "application/json" }
+      })
+
+      if (!res.ok) throw new Error("Failed to update status")
+      
+      toast.success(`Status updated to ${newStatus.replace("_", " ")}`)
       router.refresh()
-    } else {
-      alert("Failed to update status")
+    } catch (err) {
+      // Rollback
+      setStatus(oldStatus)
+      toast.error("Failed to update status")
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }
 
   return (
