@@ -387,7 +387,7 @@ export default function LandingPage() {
                </div>
 
                <div className="pt-4 border-t border-slate-50 text-center text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
-                  <p>© {new Date().getFullYear()} CampusHireX. Built by Durgam Vaishnavi. All rights reserved.</p>
+                  <p>© {new Date().getFullYear()} CampusHireX. Built by Beere Adbhutha. All rights reserved.</p>
                </div>
             </div>
          </footer>

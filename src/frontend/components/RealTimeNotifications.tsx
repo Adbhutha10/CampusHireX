@@ -13,7 +13,7 @@ export default function RealTimeNotifications({ userId }: RealTimeNotificationsP
   useEffect(() => {
     if (!userId) return
 
-    const channel = pusherClient.subscribe(`user-${userId}`)
+    const channel = pusherClient.subscribe(`private-user-${userId}`)
 
     channel.bind("status-updated", (data: { message: string, status: string, companyName: string }) => {
       toast.custom((t) => (
@@ -57,7 +57,7 @@ export default function RealTimeNotifications({ userId }: RealTimeNotificationsP
     })
 
     return () => {
-      pusherClient.unsubscribe(`user-${userId}`)
+      pusherClient.unsubscribe(`private-user-${userId}`)
     }
   }, [userId])
 

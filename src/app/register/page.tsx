@@ -75,17 +75,7 @@ export default function RegisterPage() {
               required
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Role</label>
-            <select
-              name="role"
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              required
-            >
-              <option value="STUDENT">Student</option>
-              <option value="ADMIN">Admin (Placement Officer)</option>
-            </select>
-          </div>
+
           <button
             type="submit"
             className="btn btn-primary w-full py-2.5"

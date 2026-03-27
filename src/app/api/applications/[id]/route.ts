@@ -60,7 +60,7 @@ export async function PATCH(
     try {
       const { pusherServer } = await import("@/backend/lib/pusher")
       await pusherServer.trigger(
-        `user-${application.student.userId}`,
+        `private-user-${application.student.userId}`,
         "status-updated",
         {
           message,

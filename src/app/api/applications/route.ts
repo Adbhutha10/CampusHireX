@@ -36,6 +36,25 @@ export async function POST(req: Request) {
 
     if (!student || !company) return new NextResponse("Not Found", { status: 404 })
 
+    // 1. Check if application already exists
+    const existingApplication = await prisma.application.findUnique({
+      where: {
+        studentId_companyId: {
+          studentId: student.id,
+          companyId: companyId
+        }
+      }
+    })
+
+    if (existingApplication) {
+      return new NextResponse("Already Applied", { status: 409 })
+    }
+
+    // 2. Check if deadline has passed
+    if (new Date() > new Date(company.deadline)) {
+      return new NextResponse("Deadline Passed", { status: 403 })
+    }
+
     if (student.cgpa < company.criteria) {
       return new NextResponse("Not Eligible", { status: 403 })
     }

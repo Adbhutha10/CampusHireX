@@ -3,6 +3,7 @@ import { cn } from "@/backend/lib/utils"
 import { auth } from "@/backend/auth"
 import { prisma } from "@/backend/lib/prisma"
 import { redirect } from "next/navigation"
+import MarkAsRead from "./MarkAsRead"
 
 export default async function NotificationsPage() {
   const session = await auth()
@@ -15,6 +16,7 @@ export default async function NotificationsPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-10">
+      <MarkAsRead />
       <div className="text-center md:text-left">
         <h1 className="text-4xl font-black tracking-tight text-foreground">Notification Center</h1>
         <p className="text-muted-foreground text-lg mt-2">Personalized updates and important placement announcements.</p>
