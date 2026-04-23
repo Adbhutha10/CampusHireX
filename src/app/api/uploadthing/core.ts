@@ -11,17 +11,19 @@ export const ourFileRouter = {
     .middleware(async ({ req: _req }) => {
       const session = await auth();
       if (!session) throw new UploadThingError("Unauthorized");
-      return { userId: session.user.id };
+      // Return userId so client callback can use it
+      return { userId: (session.user as any).id ?? "unknown" };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("=== UPLOADTHING SERVER ONUPLOADCOMPLETE ===");
-      console.log("File Name:", file.name);
-      console.log("File URL:", file.url);
-      console.log("File Key:", file.key);
-      console.log("Metadata:", metadata);
+      // NOTE: This callback is called by UploadThing's servers as a webhook.
+      // In local dev (localhost), UT servers cannot reach your machine, so this
+      // may fail — that is expected. The file IS uploaded successfully.
+      // The client receives the URL via onClientUploadComplete instead.
+      console.log("[UploadThing] Upload complete for userId:", metadata.userId);
+      console.log("[UploadThing] File URL:", file.ufsUrl ?? file.url);
 
-      // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata.userId, url: file.url };
+      // Return url to client's onClientUploadComplete
+      return { uploadedBy: metadata.userId, url: file.ufsUrl ?? file.url };
     }),
 } satisfies FileRouter;
 

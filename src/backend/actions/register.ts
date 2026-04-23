@@ -7,9 +7,8 @@ export async function register(formData: FormData) {
   const name = formData.get("name") as string
   const email = formData.get("email") as string
   const password = formData.get("password") as string
-  const role = formData.get("role") as string
 
-  if (!email || !password || !role) {
+  if (!email || !password) {
     return { error: "Missing fields" }
   }
 

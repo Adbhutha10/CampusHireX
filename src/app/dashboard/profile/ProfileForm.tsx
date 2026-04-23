@@ -171,14 +171,16 @@ export default function ProfileForm({ initialData }: { initialData: any }) {
               <UploadDropzone
                 endpoint="resumeUploader"
                 onClientUploadComplete={(res) => {
-                  console.log("UploadThing: Client upload complete", res);
+                  console.log("[UploadThing] onClientUploadComplete fired", res);
                   if (res?.[0]) {
-                    console.log("UploadThing: Setting resume URL to", res[0].url);
-                    setResumeUrl(res[0].url);
+                    // UploadThing v7 uses ufsUrl as the canonical URL
+                    const uploadedUrl = (res[0] as any).ufsUrl ?? res[0].url;
+                    console.log("[UploadThing] Setting resume URL to:", uploadedUrl);
+                    setResumeUrl(uploadedUrl);
                   }
                 }}
                 onUploadError={(error: Error) => {
-                  console.error("UploadThing: Client upload error", error);
+                  console.error("[UploadThing] Upload error:", error);
                   setError(`Resume Upload Failed: ${error.message}`);
                 }}
                 appearance={{

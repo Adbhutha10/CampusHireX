@@ -12,8 +12,14 @@ export default auth((req) => {
     }
   }
 
-  // Protect API routes (except auth)
-  if (nextUrl.pathname.startsWith("/api") && !nextUrl.pathname.startsWith("/api/auth")) {
+  // Protect API routes (except auth + uploadthing webhook callbacks)
+  // /api/uploadthing must be whitelisted: UploadThing's servers POST to it as a
+  // server-to-server webhook with no user session. It authenticates via HMAC signature.
+  if (
+    nextUrl.pathname.startsWith("/api") &&
+    !nextUrl.pathname.startsWith("/api/auth") &&
+    !nextUrl.pathname.startsWith("/api/uploadthing")
+  ) {
     if (!isLoggedIn) {
       return new NextResponse("Unauthorized", { status: 401 })
     }
